@@ -1,22 +1,54 @@
 <script setup lang="ts">
+    import {ref, reactive} from 'vue';
+    
+
+    let bidType = reactive({type: "buy"});
+    let bidObject = ref({
+        limit: null,
+        price: null,
+        amount: null,
+        type: bidType
+    });
+    
+    let bids = reactive([]);
+    
+    const addBid = () => {
+      bids.push(bidObject.value);
+      bidObject.value = {
+        limit: null,
+        price: null,
+        amount: null,
+        type: bidType
+      }      
+    }
+
+    const switchBid = (type) => {
+        bidType.type = type;
+        // bidObject.value.type = bidType.value;
+    }
+
+    const activeClass = (type) => {        
+        return bidType.type == type
+    }
+
 </script>
 
 <template>
-    <form action="">
+    <form action="" @submit.prevent="addBid()">
         <div class="switchBox">
-            <div class="buy">Buy</div>
-            <div class="sell">Sell</div>
+            <div :class="{'buy': true, active: activeClass('buy')}" @click="switchBid('buy')">Buy</div>
+            <div :class="{'sell': true, active: activeClass('sell')}" @click="switchBid('sell')">Sell</div>
         </div>        
         <div>
             <h2>BTC/USDT</h2>
             <div class="label">
-                <input type="number" name="" id="" placeholder="limit" />
+                <input type="number" v-model="bidObject.limit" name="" id="" placeholder="limit" />
             </div>
             <div class="label">
-                <input type="number" name="" id="" placeholder="Price" />
-                <input type="number" name="" id="" placeholder="Amount" />
-            </div>            
-            <button> Buy BTC </button>
+                <input type="number" v-model="bidObject.price" name="" id="" placeholder="Price" />
+                <input type="number" v-model="bidObject.amount" name="" id="" placeholder="Amount" />
+            </div>
+            <button>{{bidType.type}}</button>
         </div>        
     </form>
 </template>
@@ -32,14 +64,19 @@
             line-height: 45px
             font-weight: bold
             background: #DDD
-        .buy
-            background: lighten(green , 10)
-            color: #FFF
+            cursor: pointer
+        .buy            
+            color: darken(green, 20)
             border-radius: 10px 0 0 10px
-        .sell
-            background: darken(red , 14)
-            color: #FFF
+            &.active
+                background: lighten(green , 10)
+                color: #FFF
+        .sell            
             border-radius: 0 10px 10px 0
+            color: darken(red, 20)
+            &.active
+                background: darken(red , 14)
+                color: #FFF
     form
         h2
             text-align: center

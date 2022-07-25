@@ -1,9 +1,9 @@
-<script lang="ts">
+<script setup lang="ts">
 </script>
 
 <template>
     <header>
-        <h5>Header</h5>
+        <h5><b>VueCrypto</b> <i>V1.0</i></h5>
     </header>
 </template>
 
